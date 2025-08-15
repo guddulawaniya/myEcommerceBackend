@@ -7,7 +7,10 @@ const path = require('path');
 
 const connectDB = require('./config/db');
 // Routes
-const productRoutes = require('./routes/products/crud');
+const productRoutes = require('./routes/productRoutes');
+const categoryRoutes = require('./routes/categoryRoutes');
+const bannerRoutes = require('./routes/bannerRoutes');
+const treadingRoutes = require('./routes/TrendingProductRoutes');
 
 dotenv.config();
 
@@ -18,9 +21,12 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.use('/api/treading', treadingRoutes);
 app.use('/api/products', productRoutes);
+app.use('/api/categories', categoryRoutes);
+app.use('/api/banners', bannerRoutes);
 
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/api/uploads', express.static(path.join(__dirname, 'uploads')));
 connectDB();
 
 // Start server
