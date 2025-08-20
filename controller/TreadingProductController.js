@@ -1,4 +1,4 @@
-const TreadingProduct = require('../models/TreadingProduct');
+const TreadingProduct = require('../models/TrandingProducts');
 const Category = require('../models/Category');
 const path = require('path');
 const fs = require('fs');

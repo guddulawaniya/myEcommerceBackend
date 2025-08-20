@@ -11,6 +11,10 @@ const productRoutes = require('./routes/productRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
 const bannerRoutes = require('./routes/bannerRoutes');
 const treadingRoutes = require('./routes/TrendingProductRoutes');
+const otpRoutes = require('./routes/otpRoutes');
+const cartRoutes = require('./routes/cartRoutes');
+const reviewRoutes = require('./routes/reviewsRoutes');
+const wishlistRoutes = require('./routes/wishlistRoutes')
 
 dotenv.config();
 
@@ -25,6 +29,10 @@ app.use('/api/treading', treadingRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/banners', bannerRoutes);
+app.use('/api/otp', otpRoutes);
+app.use('/api/cart', cartRoutes);
+app.use('/api/reviews', reviewRoutes);
+app.use('/api/wishlist', wishlistRoutes);
 
 app.use('/api/uploads', express.static(path.join(__dirname, 'uploads')));
 connectDB();
