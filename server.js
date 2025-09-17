@@ -26,7 +26,11 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use('/api/treading', treadingRoutes);
+<<<<<<< HEAD
+app.use('/api/', productRoutes);
+=======
 app.use('/api/products', productRoutes);
+>>>>>>> bc32ebeacccd7e7eed030fd2a282441fec3efdc2
 app.use('/api/categories', categoryRoutes);
 app.use('/api/banners', bannerRoutes);
 app.use('/api/otp', otpRoutes);

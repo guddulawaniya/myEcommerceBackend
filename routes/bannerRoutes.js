@@ -1,11 +1,19 @@
 const express = require('express');
 const path = require('path');
 const bannerController = require('../controller/bannerController');
+<<<<<<< HEAD
+
+const router = express.Router();
+
+const { createUpload } = require("../middlewares/uploads");
+
+=======
 const createUpload = require('../middlewares/uploads'); // Import function
 
 const router = express.Router();
 
 // Create upload middleware for "banners" folder
+>>>>>>> bc32ebeacccd7e7eed030fd2a282441fec3efdc2
 const uploadBanner = createUpload("banners");
 
 // Routes

@@ -36,6 +36,8 @@ exports.createBanner = async (req, res) => {
   }
 };
 
+<<<<<<< HEAD
+=======
 // // Create banner
 // exports.createBanner = async (req, res) => {
 //   try {
@@ -61,6 +63,7 @@ exports.createBanner = async (req, res) => {
 // };
 
 
+>>>>>>> bc32ebeacccd7e7eed030fd2a282441fec3efdc2
 // Get all banners
 exports.getBanners = async (req, res) => {
   try {

@@ -7,7 +7,11 @@ const authMiddleware = async (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+<<<<<<< HEAD
+    req.user = await User.findById(decoded.id).select("-otp -otpExpires -password");
+=======
     req.user = await User.findById(decoded.id).select("-otp -otpExpires");
+>>>>>>> bc32ebeacccd7e7eed030fd2a282441fec3efdc2
     next();
   } catch (err) {
     return res.status(401).json({ error: "Invalid token" });

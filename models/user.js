@@ -21,7 +21,10 @@ const userSchema = new mongoose.Schema(
       default: "https://www.gravatar.com/avatar/?d=mp",
     },
 
+<<<<<<< HEAD
+=======
     // 🔑 OTP fields
+>>>>>>> bc32ebeacccd7e7eed030fd2a282441fec3efdc2
     otp: { type: String },
     otpExpires: { type: Date },
   },
