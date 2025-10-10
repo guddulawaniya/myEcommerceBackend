@@ -1,11 +1,26 @@
-// routes/logout.js
-const express = require('express')
-const router = express.Router()
+// use this code while using cookies
+const express = require('express');
+const router = express.Router();
 
-router.post('/', (req, res) => {
-  // Destroy session if used, blacklist JWT if desired
-  req.session?.destroy?.()
-  res.json({ message: 'Logged out' })
-})
+// In-memory token blacklist (for example, replace with DB if needed)
+const tokenBlacklist = new Set();
 
-module.exports = router
+router.post('/logout', (req, res) => {
+  try {
+    // Clear JWT token cookie if used
+    res.clearCookie('token');
+
+    // Blacklist token from cookie or header to invalidate it
+    const token = req.cookies.token || req.headers.authorization?.split(' ')[1];
+    if (token) {
+      tokenBlacklist.add(token);
+    }
+
+    res.status(200).json({ message: 'Logged out successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Logout failed' });
+  }
+});
+
+
+module.exports = router;

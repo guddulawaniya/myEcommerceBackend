@@ -4,7 +4,7 @@ const Product = require("../models/product");
 // Add item 
 exports.addToCart = async (req, res) => {
   try {
-    const userId = req.user.id || '1234';
+    const userId = req.user.id ;
     const { productId, quantity } = req.body;
 
     const product = await Product.findById(productId);

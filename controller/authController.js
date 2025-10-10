@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const User = require("../models/user");
+const User = require("../models/User");
 
 exports.sendOtp = async (req, res) => {
   try {
@@ -28,15 +28,11 @@ exports.verifyOtp = async (req, res) => {
     const { contact, otp } = req.body;
     const user = await User.findOne({ contact });
 
-    //console.log('user.otp:', user.otp, typeof user.otp); // From DB
-    //console.log('otp from request:', otp, typeof otp);   // From client
-    //console.log('user.otpExpires:', user.otpExpires, 'Current:', Date.now());
+    if (!user) return res.status(404).json({ error: "User not found" });
 
     const storedOtp = String(user.otp).trim();
     const receivedOtp = String(otp).trim();
 
-
-    if (!user) return res.status(404).json({ error: "User not found" });
     if (storedOtp !== receivedOtp || Date.now() > user.otpExpires) {
       return res.status(400).json({ error: "Invalid or expired OTP" });
     }
@@ -45,12 +41,23 @@ exports.verifyOtp = async (req, res) => {
     user.otpExpires = null;
     await user.save();
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "7d",
-    });
+    // Determine if this is the first login based on missing name or email
+    const isFirstLogin = !user.name || !user.email;
 
-    return res.json({ success: true, message: "Login successful", token });
-    //return res.json({ message: "Login successful", token });
+    const tokenPayload = {
+      id: user._id,
+      name: user.name || '',
+      email: user.email || ''
+    };
+
+    const token = jwt.sign(tokenPayload, process.env.JWT_SECRET, { expiresIn: "7d" });
+
+    return res.json({
+      success: true,
+      message: "Login successful",
+      token,
+      isFirstLogin
+    });
   } catch (err) {
     return res.status(500).json({ error: err.message });
   }

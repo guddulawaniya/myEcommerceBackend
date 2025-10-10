@@ -17,8 +17,13 @@ const reviewRoutes = require('./routes/reviewsRoutes');
 const wishlistRoutes = require('./routes/wishlistRoutes')
 const newReleasesRoutes = require('./routes/newReleaseRoutes');
 const dealsRoutes = require('./routes/dealsRoutes');
-const logoutRoutes = require('./routes/logoutRoutes')
 const profileRoutes = require('./routes/profileRoutes');
+const userRoutes = require('./routes/userRoutes');
+const authRoutes = require('./routes/authRoutes');
+const logoutRoutes = require('./routes/logoutRoutes');
+//const { router: logoutRoutes, tokenBlacklist } = require('./routes/logoutRoutes');
+
+
 dotenv.config();
 
 const app = express();
@@ -40,8 +45,10 @@ app.use('/api/reviews', reviewRoutes);
 app.use('/api/wishlist', wishlistRoutes);
 app.use('/api/newRelease', newReleasesRoutes);
 app.use('/api/deals', dealsRoutes);
-app.use('/api/logout',logoutRoutes);
 app.use('/api/profile', profileRoutes);
+app.use('/api/user', userRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api',logoutRoutes)
 
 
 app.use('/api/uploads', express.static(path.join(__dirname, 'uploads')));
