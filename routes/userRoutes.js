@@ -10,10 +10,14 @@ router.post('/register', userController.registerUser); // registration form subm
 router.get('/profile', authMiddleware, userController.getUserProfile);
 
 // Update user profile (protected)
-router.put('/profile', authMiddleware, userController.updateUserProfile);
+router.patch('/profile/update', authMiddleware, userController.updateUserProfile);
 
 // Optionally: Fetch all users (admin only, add role check to middleware)
 //router.get('/', authMiddleware, userController.getAllUsers);
+
+router.post('/profile/deactivate', authMiddleware, userController.deactivateUser);
+router.delete('/profile/delete', authMiddleware, userController.deleteUser);
+
 
 // Example logout endpoint (handle on frontend by removing token)
 router.post('/logout', (req, res) => {

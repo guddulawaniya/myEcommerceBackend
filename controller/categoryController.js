@@ -28,7 +28,10 @@ exports.createCategory = async (req, res) => {
     res.status(201).json({status : true, message: "Category created successfully", category });
 
   } catch (error) {
-    res.status(500).json({status : false, message: "Server error", error });
+    if(error.code === 11000) {
+      return res.status(400).json({status: false, message: "Category name must be unique" });
+    }
+    res.status(500).json({status: false, message: "Server error", error });
   }
 };
 

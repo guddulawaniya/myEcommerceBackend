@@ -35,6 +35,7 @@ app.use(cors({
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+
 app.use('/api/treading', treadingRoutes);
 app.use('/api/', productRoutes);
 app.use('/api/categories', categoryRoutes);

@@ -5,7 +5,27 @@ const { updateProductSchema } = require('../validators/productValidator');
 
 exports.createProduct = async (req, res) => {
   try {
-    const { name, description, price, category, stock } = req.body;
+    let { name, description, price, category, stock, discountPrice, onSale, variants  } = req.body;
+
+    if (variants && typeof variants === "string") {
+      try {
+        variants = JSON.parse(variants);
+      } catch (err) {
+        return res.status(400).json({
+          success: false,
+          msg: "Invalid JSON format for 'variants' field",
+        });
+      }
+    }
+
+    if (onSale && typeof onSale === "string") {
+      onSale = onSale === "true";
+    }
+
+    if (discountPrice && typeof discountPrice === "string") {
+      discountPrice = parseFloat(discountPrice);
+    }
+
     const files = req.files;
 
     if (!files || files.length === 0) {
@@ -29,6 +49,9 @@ exports.createProduct = async (req, res) => {
       price,
       category,
       stock,
+      discountPrice,
+      onSale,
+      variants,
       images: imageArray
     });
 

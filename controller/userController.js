@@ -5,26 +5,32 @@ const User = require('../models/User');
 exports.registerUser = async (req, res) => {
   try {
     // These fields are expected from the registration form
-    const { name, email, contact, avatar } = req.body;
+    const { firstName, lastName, email, contact, avatar, gender } = req.body;
 
-    // Find by contact, update profile and isFirstLogin
+    // Find by contact
     let user = await User.findOne({ contact });
 
     if (!user) {
-      // Create if user not present (optional: for pure registration)
+      // Create if user not present
       user = await User.create({
-        name,
+        firstName,
+        lastName,
         email,
         contact,
         avatar,
-        isFirstLogin: false,
+        gender,
+        isFirstLogin: false
       });
     } else {
-      // Update user profile and mark registration complete
-      user.name = name;
-      user.email = email;
-      user.avatar = avatar;
-      user.isFirstLogin = false;
+      // Update profile and mark registration complete
+      Object.assign(user, {
+        firstName,
+        lastName,
+        email,
+        avatar,
+        gender,
+        isFirstLogin: false
+      });
       await user.save();
     }
 
@@ -44,7 +50,8 @@ exports.registerUser = async (req, res) => {
 exports.getUserProfile = async (req, res) => {
   try {
     const userId = req.user.id;
-    const user = await User.findById(userId).select('-password -otp -otpExpires');
+    const user = await User.findById(userId)
+      .select('-password -otp -otpExpires');
     if (!user) return res.status(404).json({ error: 'User not found' });
     res.json({ success: true, user });
   } catch (error) {
@@ -55,14 +62,17 @@ exports.getUserProfile = async (req, res) => {
 // Update User Profile (protected)
 exports.updateUserProfile = async (req, res) => {
   const userId = req.user.id; // populated by auth middleware
-  const allowedUpdates = ['name', 'email', 'contact', 'address', 'avatar'];
+  const allowedUpdates = ['firstName', 'lastName', 'email', 'contact', 'avatar', 'gender'];
   const updates = {};
 
-  allowedUpdates.forEach(f => {
-    if (req.body[f] !== undefined) updates[f] = req.body[f];
+  // Build updates object
+  allowedUpdates.forEach(field => {
+    if (req.body[field] !== undefined && !(field === 'gender' && !req.body[field])) {
+      updates[field] = req.body[field];
+    }
   });
 
-  // Ensure isFirstLogin is set to false after profile registration/update
+  // Ensure isFirstLogin is false after update
   updates.isFirstLogin = false;
 
   try {
@@ -71,9 +81,40 @@ exports.updateUserProfile = async (req, res) => {
       { $set: updates },
       { new: true, runValidators: true }
     ).select('-password -otp -otpExpires');
+
     if (!user) return res.status(404).json({ error: 'User not found' });
     res.json({ success: true, user });
   } catch (err) {
     res.status(500).json({ error: 'Update failed', details: err.message });
   }
 };
+
+// deactivate user
+
+exports.deactivateUser = async (req, res) => {
+  try {
+    const userId = req.user.id; // Auth middleware sets this
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { $set: { isActive: false } }, // You can use status: "deactivated" instead
+      { new: true }
+    ).select('-password -otp -otpExpires');
+    if (!user) return res.status(404).json({ success: false, error: "User not found" });
+    res.json({ success: true, user });
+  } catch (error) {
+    res.status(500).json({ success: false, error: "Failed to deactivate account", details: error.message });
+  }
+};
+
+// delete user
+exports.deleteUser = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const user = await User.findByIdAndDelete(userId);
+    if (!user) return res.status(404).json({ success: false, error: "User not found" });
+    res.json({ success: true, message: "Account deleted" });
+  } catch (error) {
+    res.status(500).json({ success: false, error: "Failed to delete account", details: error.message });
+  }
+};
+
