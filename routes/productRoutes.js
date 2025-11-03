@@ -10,10 +10,11 @@ const authMiddleware = require("../middlewares/authMiddleware");
 const { upload } = require("../middlewares/uploads");
 const validateRequest = require("../middlewares/validateRequest");
 const { productValidationSchema } = require("../validators/productValidator");
+const parseJSONFields = require("../middlewares/parseJSONFields");
 
 const router = express.Router();
 
-router.post("/products", upload.array("images", 5),validateRequest(productValidationSchema), createProduct);
+router.post("/products", upload.array("images", 5),parseJSONFields,validateRequest(productValidationSchema), createProduct);
 router.put("/products/:id",authMiddleware, upload.array("images", 5), updateProduct);
 router.delete("/products/:id",authMiddleware, deleteProduct);
 router.get("/products/:id", getProductById);

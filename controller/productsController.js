@@ -5,26 +5,7 @@ const { updateProductSchema } = require('../validators/productValidator');
 
 exports.createProduct = async (req, res) => {
   try {
-    let { name, description, price, category, stock, discountPrice, onSale, variants  } = req.body;
-
-    if (variants && typeof variants === "string") {
-      try {
-        variants = JSON.parse(variants);
-      } catch (err) {
-        return res.status(400).json({
-          success: false,
-          msg: "Invalid JSON format for 'variants' field",
-        });
-      }
-    }
-
-    if (onSale && typeof onSale === "string") {
-      onSale = onSale === "true";
-    }
-
-    if (discountPrice && typeof discountPrice === "string") {
-      discountPrice = parseFloat(discountPrice);
-    }
+    let { name, slug, description, price, category, stock, discountPrice, onSale, variants  } = req.body;
 
     const files = req.files;
 
@@ -45,6 +26,7 @@ exports.createProduct = async (req, res) => {
     // Create product
     const product = await Product.create({
       name,
+      slug,
       description,
       price,
       category,

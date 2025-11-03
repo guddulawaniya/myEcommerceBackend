@@ -68,7 +68,7 @@ exports.updateProductSchema = Joi.object({
       size: Joi.string().optional(),
       color: Joi.string().required(),
       //price: Joi.number().optional(),
-      //stock: Joi.number().integer().min(0).optional(),
+      stock: Joi.number().integer().min(0).optional(),
       sku: Joi.string().optional(),
       isDefault: Joi.boolean().optional(),
       // removed color and images to match your schema
