@@ -20,11 +20,16 @@ exports.addToCart = async (req, res) => {
       (item) => item.product.toString() === productId
     );
 
+    // Add item, with cart item's price snapshot
     if (itemIndex > -1) {
       cart.items[itemIndex].quantity += quantity;
-    } else {
-      cart.items.push({ product: productId, quantity });
-    }
+      } else {
+              cart.items.push({ product: productId, quantity, price: product.price });
+      }
+
+cart.totalPrice = calculateTotal(cart.items); // Use sync helper
+await cart.save();
+
 
     cart.totalPrice = await calculateTotal(cart.items);
     await cart.save();
@@ -70,11 +75,11 @@ exports.removeFromCart = async (req, res) => {
 };
 
 // Helper
-const calculateTotal = async (items) => {
+const calculateTotal = (items) => {
   let total = 0;
   for (const item of items) {
-    const product = await Product.findById(item.product);
-    total += product.price * item.quantity;
+    total += item.price * item.quantity;
   }
   return total;
 };
+

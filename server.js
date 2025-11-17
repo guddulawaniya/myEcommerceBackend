@@ -23,6 +23,8 @@ const authRoutes = require('./routes/authRoutes');
 const logoutRoutes = require('./routes/logoutRoutes');
 //const { router: logoutRoutes, tokenBlacklist } = require('./routes/logoutRoutes');
 
+const addressRoutes = require('./routes/addressRoutes');
+
 
 dotenv.config();
 
@@ -49,7 +51,8 @@ app.use('/api/deals', dealsRoutes);
 app.use('/api/profile', profileRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/auth', authRoutes);
-app.use('/api',logoutRoutes)
+app.use('/api',logoutRoutes);
+app.use('/api/address', addressRoutes);
 
 
 app.use('/api/uploads', express.static(path.join(__dirname, 'uploads')));
